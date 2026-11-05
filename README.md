@@ -4,21 +4,18 @@ Static hunting log. One folder per day becomes one page: text, a map of the Garm
 
 The site title lives in [`src/config.ts`](src/config.ts) (`title`). Change it there.
 
-## Deploy on Cloudflare Pages
+## Deploy
 
-Use the static build. Do not add `@astrojs/cloudflare` or any server adapter.
+Static Astro output only. Do not add `@astrojs/cloudflare` or any server adapter. [`wrangler.jsonc`](wrangler.jsonc) names the Worker `hunting-blog`, serves `./dist`, and leaves `previews` empty so preview builds can use the same file.
 
-| Setting | Value |
-| --- | --- |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Root directory | repository root |
-| Node.js | 22 (`NODE_VERSION=22` if the project default is older) |
-| Environment variables | none |
+```bash
+npm run build
+npx wrangler deploy
+```
 
-Pages installs dependencies, runs the build, and publishes `dist`. Resized images are created during the build. They are not committed.
+Workers Builds can use build command `npm run build`, deploy command `npx wrangler deploy`, and preview command `npx wrangler preview`. Node.js 22. No environment variables are required for the site itself.
 
-Production branch is whatever you connect in Pages, usually `main`.
+The same `dist` folder can also be published with Cloudflare Pages (build command `npm run build`, output directory `dist`).
 
 ## Local development
 
