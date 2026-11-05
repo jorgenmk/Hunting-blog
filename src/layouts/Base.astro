@@ -1,0 +1,62 @@
+---
+import '@fontsource/literata/latin-400.css';
+import '@fontsource/literata/latin-ext-400.css';
+import '@fontsource/literata/latin-700.css';
+import '@fontsource/literata/latin-ext-700.css';
+import '@fontsource/source-sans-3/latin-400.css';
+import '@fontsource/source-sans-3/latin-ext-400.css';
+import '@fontsource/source-sans-3/latin-600.css';
+import '@fontsource/source-sans-3/latin-ext-600.css';
+import Logo from '../components/Logo.astro';
+import { siteConfig } from '../config';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  home?: boolean;
+}
+
+const { title, description = siteConfig.description, home = false } = Astro.props;
+const pageTitle = title ? `${title} · ${siteConfig.title}` : siteConfig.title;
+---
+
+<!doctype html>
+<html lang={siteConfig.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#1e2d22" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="nb_NO" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip" href="#innhold">Hopp til innhold</a>
+    <header class="site-header">
+      {
+        home ? (
+          <h1 class="brand">
+            <Logo />
+            <span>{siteConfig.title}</span>
+          </h1>
+        ) : (
+          <a class="brand" href="/">
+            <Logo />
+            <span>{siteConfig.title}</span>
+          </a>
+        )
+      }
+    </header>
+    <main id="innhold" class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>Kartdata fra Kartverket. OpenStreetMap brukes hvis topokartet ikke svarer.</p>
+    </footer>
+  </body>
+</html>

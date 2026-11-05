@@ -1,0 +1,76 @@
+---
+import type { PhotoRecord } from '../lib/types';
+import { ui } from '../ui';
+
+interface Props {
+  photos: PhotoRecord[];
+}
+
+const { photos } = Astro.props;
+const items = photos.map((photo, index) => ({
+  id: photo.id,
+  full: photo.src,
+  caption: photo.caption,
+  n: index + 1,
+}));
+---
+
+{
+  photos.length > 0 && (
+<section class="gallery-section" data-gallery data-photos={JSON.stringify(items)}>
+  <h2>{ui.photos}</h2>
+  <ul class="gallery">
+    {
+      photos.map((photo, index) => {
+        const placed = photo.lat != null && photo.lon != null;
+        return (
+          <li>
+            <figure class="photo" data-photo-id={photo.id}>
+              {placed ? (
+                <button type="button" class="shot" data-focus-photo={photo.id}>
+                  <img
+                    src={photo.thumb}
+                    alt={photo.caption}
+                    width={photo.thumbWidth}
+                    height={photo.thumbHeight}
+                  />
+                </button>
+              ) : (
+                <button type="button" class="shot" data-open-lightbox={photo.id}>
+                  <img
+                    src={photo.thumb}
+                    alt={photo.caption}
+                    width={photo.thumbWidth}
+                    height={photo.thumbHeight}
+                  />
+                </button>
+              )}
+              <figcaption>
+                <span class="photo-n">{index + 1}</span>
+                <span class="photo-caption">{photo.caption}</span>
+                {photo.placedBy === 'time' && <span class="badge">{ui.placedByTime}</span>}
+                {!placed && <span class="badge">{ui.noPosition}</span>}
+                <button type="button" class="text-button" data-open-lightbox={photo.id}>
+                  {ui.enlarge}
+                </button>
+              </figcaption>
+            </figure>
+          </li>
+        );
+      })
+    }
+  </ul>
+  <dialog class="lightbox" aria-label={ui.lightbox}>
+    <figure class="lightbox-figure">
+      <img alt="" />
+      <figcaption></figcaption>
+      <div class="lightbox-bar">
+        <button type="button" data-prev>{ui.previous}</button>
+        <button type="button" data-close>{ui.close}</button>
+        <button type="button" data-next>{ui.next}</button>
+      </div>
+    </figure>
+  </dialog>
+</section>
+  )
+}

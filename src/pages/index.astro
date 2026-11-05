@@ -1,0 +1,107 @@
+---
+import { getCollection } from 'astro:content';
+import TrackMap from '../components/TrackMap.astro';
+import { siteConfig } from '../config';
+import Base from '../layouts/Base.astro';
+import { formatDate, formatDistance, formatDuration, seasonFor } from '../lib/format';
+import { loadManifest } from '../lib/loadManifest';
+import { ui } from '../ui';
+
+const manifest = loadManifest();
+const byId = new Map(manifest.days.map((day) => [day.id, day]));
+const days = (await getCollection('days'))
+  .map((entry) => {
+    const assets = byId.get(entry.id);
+    if (!assets) {
+      throw new Error(`No prepared assets for ${entry.id}. Check the day folder and the build log.`);
+    }
+    return { entry, assets };
+  })
+  .sort(
+    (a, b) =>
+      b.entry.data.date.localeCompare(a.entry.data.date) || b.entry.id.localeCompare(a.entry.id),
+  );
+
+const groups: { label: string; days: typeof days }[] = [];
+for (const day of days) {
+  const season = seasonFor(day.entry.data.date, siteConfig.seasonStartMonth);
+  const current = groups[groups.length - 1];
+  if (!current || current.label !== season.label) groups.push({ label: season.label, days: [day] });
+  else current.days.push(day);
+}
+
+const overview = days.flatMap((day, index) => {
+  if (day.assets.tracks.every((segment) => segment.length === 0)) return [];
+  return [
+    {
+      label: day.entry.data.title,
+      href: `/dag/${day.entry.id}/`,
+      color: siteConfig.trackColors[index % siteConfig.trackColors.length] ?? siteConfig.trackColors[0],
+      segments: day.assets.tracks,
+    },
+  ];
+});
+---
+
+<Base home description={siteConfig.description}>
+  <p class="lede">{siteConfig.tagline}</p>
+  {
+    overview.length > 0 && (
+      <section class="overview">
+        <h2>{ui.overviewMap}</h2>
+        <TrackMap mapId="oversikt" label={ui.overviewMap} tracks={overview} />
+      </section>
+    )
+  }
+  {
+    days.length === 0 && (
+      <div class="empty">
+        <p>{ui.empty}</p>
+        <p>{ui.emptyHint}</p>
+      </div>
+    )
+  }
+  {
+    groups.map((group) => (
+      <section>
+        <h2 class="season">{group.label}</h2>
+        <ol class="day-list">
+          {group.days.map((day) => {
+            const cover = day.assets.photos[0];
+            const facts = [
+              formatDistance(day.assets.distanceM, siteConfig.locale),
+              day.assets.durationS != null ? formatDuration(day.assets.durationS) : null,
+            ].filter(Boolean);
+            return (
+              <li>
+                <a class="day-card" href={`/dag/${day.entry.id}/`}>
+                  {cover ? (
+                    <img
+                      src={cover.thumb}
+                      alt={cover.caption}
+                      width={cover.thumbWidth}
+                      height={cover.thumbHeight}
+                    />
+                  ) : (
+                    <div class="cover-fallback">{day.entry.data.area ?? siteConfig.title}</div>
+                  )}
+                  <div class="day-card-body">
+                    <p class="meta">
+                      <time datetime={day.entry.data.date}>
+                        {formatDate(day.entry.data.date, siteConfig.locale)}
+                      </time>
+                      {day.entry.data.area && <span> · {day.entry.data.area}</span>}
+                    </p>
+                    <h3>{day.entry.data.title}</h3>
+                    {day.entry.data.summary && <p>{day.entry.data.summary}</p>}
+                    <p class="meta facts">{facts.join(' · ')}</p>
+                  </div>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    ))
+  }
+</Base>

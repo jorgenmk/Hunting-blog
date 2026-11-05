@@ -1,0 +1,42 @@
+---
+import 'leaflet/dist/leaflet.css';
+import { siteConfig } from '../config';
+import type { MapPayload, MapPhoto, MapTrack } from '../lib/types';
+import { ui } from '../ui';
+
+interface Props {
+  mapId: string;
+  label: string;
+  tracks: MapTrack[];
+  photos?: MapPhoto[];
+  start?: [number, number] | null;
+  end?: [number, number] | null;
+  loop?: boolean;
+}
+
+const { mapId, label, tracks, photos = [], start = null, end = null, loop = false } = Astro.props;
+const payload: MapPayload = {
+  tracks,
+  photos,
+  start,
+  end,
+  loop,
+  tiles: siteConfig.maps,
+};
+---
+
+<div
+  id={mapId}
+  class="map-frame"
+  role="region"
+  aria-label={label}
+  data-track-map
+  data-payload={JSON.stringify(payload)}
+>
+  <p class="map-fallback">{ui.mapNeedsJs}</p>
+</div>
+
+<script>
+  import { mountMaps } from '../scripts/map';
+  mountMaps();
+</script>
