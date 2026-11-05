@@ -66,7 +66,7 @@ Adding a day means creating one folder. Do not edit routes, the map, or coordina
    - `summary` (optional): one plain-text sentence for the index. No Markdown.
    - Do not embed pictures with `![](...)`. Photos in the folder are picked up on their own. An embedded file would be copied with its original EXIF, and the build is set up to fail if a published image still has GPS.
 
-3. Add exactly one Garmin GPX file. Any name ending in `.gpx` is fine. Export the track the watch already recorded (`<trk>` / `<trkpt>`, with `<ele>` and `<time>` when the watch stored them). Do not draw a replacement track.
+3. Add the Garmin GPX files. Any name ending in `.gpx` is fine, and a day may contain more than one. Each file is drawn as its own track and is not joined to the next. A day with no `.gpx` still builds, without distance or time stats. Export the track the watch already recorded (`<trk>` / `<trkpt>`, with `<ele>` and `<time>` when the watch stored them). Do not draw a replacement track.
 
 4. Add the photos next to `index.md`. JPEG is the safe choice. PNG, WebP, and HEIC are also accepted. If the build cannot decode a HEIC file, convert that file to JPEG and replace it.
 

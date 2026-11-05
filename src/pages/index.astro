@@ -31,13 +31,14 @@ for (const day of days) {
 }
 
 const overview = days.flatMap((day, index) => {
-  if (day.assets.tracks.every((segment) => segment.length === 0)) return [];
+  const segments = day.assets.tracks.flatMap((track) => track.segments);
+  if (!segments.some((segment) => segment.length > 0)) return [];
   return [
     {
       label: day.entry.data.title,
       href: `/dag/${day.entry.id}/`,
       color: siteConfig.trackColors[index % siteConfig.trackColors.length] ?? siteConfig.trackColors[0],
-      segments: day.assets.tracks,
+      segments,
     },
   ];
 });
@@ -69,9 +70,9 @@ const overview = days.flatMap((day, index) => {
           {group.days.map((day) => {
             const cover = day.assets.photos[0];
             const facts = [
-              formatDistance(day.assets.distanceM, siteConfig.locale),
+              day.assets.distanceM != null ? formatDistance(day.assets.distanceM, siteConfig.locale) : null,
               day.assets.durationS != null ? formatDuration(day.assets.durationS) : null,
-            ].filter(Boolean);
+            ].filter((fact) => fact != null);
             return (
               <li>
                 <a class="day-card" href={`/dag/${day.entry.id}/`}>

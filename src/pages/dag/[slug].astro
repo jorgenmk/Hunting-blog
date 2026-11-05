@@ -49,6 +49,10 @@ const clock =
   assets.startedAt && assets.endedAt
     ? `${formatClock(assets.startedAt, siteConfig.locale, siteConfig.timezone)}–${formatClock(assets.endedAt, siteConfig.locale, siteConfig.timezone)}`
     : null;
+const hasStats =
+  assets.distanceM != null || assets.elevationGainM != null || assets.durationS != null || clock != null;
+const hasMap =
+  assets.tracks.some((track) => track.segments.some((segment) => segment.length > 0)) || mapPhotos.length > 0;
 ---
 
 <Base title={day.data.title} description={day.data.summary ?? siteConfig.description}>
@@ -63,15 +67,24 @@ const clock =
         <p class="meta">{formatList(day.data.participants)}</p>
       )
     }
+    {hasStats && (
     <dl class="stats">
-      <div>
-        <dt>{ui.distance}</dt>
-        <dd>{formatDistance(assets.distanceM, siteConfig.locale)}</dd>
-      </div>
-      <div>
-        <dt>{ui.elevation}</dt>
-        <dd>{formatElevation(assets.elevationGainM, siteConfig.locale)}</dd>
-      </div>
+      {
+        assets.distanceM != null && (
+          <div>
+            <dt>{ui.distance}</dt>
+            <dd>{formatDistance(assets.distanceM, siteConfig.locale)}</dd>
+          </div>
+        )
+      }
+      {
+        assets.elevationGainM != null && (
+          <div>
+            <dt>{ui.elevation}</dt>
+            <dd>{formatElevation(assets.elevationGainM, siteConfig.locale)}</dd>
+          </div>
+        )
+      }
       {
         assets.durationS != null && (
           <div>
@@ -89,18 +102,21 @@ const clock =
         )
       }
     </dl>
+    )}
+    {
+      assets.tracks.length === 0 && <p class="note">{ui.noTrack}</p>
+    }
+    {hasMap && (
     <section class="map-section">
       <h2>{ui.map}</h2>
       <TrackMap
         mapId="turkart"
         label={`${ui.map}: ${day.data.title}`}
-        tracks={[
-          {
-            label: day.data.title,
-            color: siteConfig.trackColors[0],
-            segments: assets.tracks,
-          },
-        ]}
+        tracks={assets.tracks.map((track, index) => ({
+          label: track.file,
+          color: siteConfig.trackColors[index % siteConfig.trackColors.length] ?? siteConfig.trackColors[0],
+          segments: track.segments,
+        }))}
         photos={mapPhotos}
         start={assets.start}
         end={assets.end}
@@ -112,6 +128,7 @@ const clock =
         )
       }
     </section>
+    )}
     <section class="notes">
       <h2>{ui.notes}</h2>
       <div class="prose">
