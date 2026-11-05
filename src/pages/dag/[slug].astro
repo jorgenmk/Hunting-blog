@@ -1,0 +1,123 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+import Gallery from '../../components/Gallery.astro';
+import TrackMap from '../../components/TrackMap.astro';
+import { siteConfig } from '../../config';
+import Base from '../../layouts/Base.astro';
+import {
+  formatClock,
+  formatDate,
+  formatDistance,
+  formatDuration,
+  formatElevation,
+  formatList,
+} from '../../lib/format';
+import { loadManifest } from '../../lib/loadManifest';
+import type { MapPhoto } from '../../lib/types';
+import { ui } from '../../ui';
+
+export async function getStaticPaths() {
+  const days = await getCollection('days');
+  return days.map((day) => ({ params: { slug: day.id } }));
+}
+
+const slug = Astro.params.slug;
+if (!slug) throw new Error('Missing day slug');
+const day = await getEntry('days', slug);
+if (!day) throw new Error(`Missing day ${slug}`);
+const assets = loadManifest().days.find((item) => item.id === day.id);
+if (!assets) {
+  throw new Error(`No prepared assets for ${day.id}. Check the day folder and the build log.`);
+}
+const { Content } = await render(day);
+const unplaced = assets.photos.filter((photo) => photo.placedBy == null).length;
+const mapPhotos: MapPhoto[] = assets.photos.flatMap((photo, index) => {
+  if (photo.lat == null || photo.lon == null || photo.placedBy == null) return [];
+  return [
+    {
+      id: photo.id,
+      n: index + 1,
+      lat: photo.lat,
+      lon: photo.lon,
+      thumb: photo.thumb,
+      caption: photo.caption,
+      placedBy: photo.placedBy,
+    },
+  ];
+});
+const clock =
+  assets.startedAt && assets.endedAt
+    ? `${formatClock(assets.startedAt, siteConfig.locale, siteConfig.timezone)}–${formatClock(assets.endedAt, siteConfig.locale, siteConfig.timezone)}`
+    : null;
+---
+
+<Base title={day.data.title} description={day.data.summary ?? siteConfig.description}>
+  <article>
+    <p class="meta">
+      <time datetime={day.data.date}>{formatDate(day.data.date, siteConfig.locale)}</time>
+      {day.data.area && <span> · {day.data.area}</span>}
+    </p>
+    <h1>{day.data.title}</h1>
+    {
+      day.data.participants && day.data.participants.length > 0 && (
+        <p class="meta">{formatList(day.data.participants)}</p>
+      )
+    }
+    <dl class="stats">
+      <div>
+        <dt>{ui.distance}</dt>
+        <dd>{formatDistance(assets.distanceM, siteConfig.locale)}</dd>
+      </div>
+      <div>
+        <dt>{ui.elevation}</dt>
+        <dd>{formatElevation(assets.elevationGainM, siteConfig.locale)}</dd>
+      </div>
+      {
+        assets.durationS != null && (
+          <div>
+            <dt>{ui.duration}</dt>
+            <dd>{formatDuration(assets.durationS)}</dd>
+          </div>
+        )
+      }
+      {
+        clock && (
+          <div>
+            <dt>{ui.span}</dt>
+            <dd>{clock}</dd>
+          </div>
+        )
+      }
+    </dl>
+    <section class="map-section">
+      <h2>{ui.map}</h2>
+      <TrackMap
+        mapId="turkart"
+        label={`${ui.map}: ${day.data.title}`}
+        tracks={[
+          {
+            label: day.data.title,
+            color: siteConfig.trackColors[0],
+            segments: assets.tracks,
+          },
+        ]}
+        photos={mapPhotos}
+        start={assets.start}
+        end={assets.end}
+        loop={assets.loop}
+      />
+      {
+        unplaced > 0 && (
+          <p class="note">{unplaced === 1 ? ui.unplacedOne : ui.unplacedMany(unplaced)}</p>
+        )
+      }
+    </section>
+    <section class="notes">
+      <h2>{ui.notes}</h2>
+      <div class="prose">
+        <Content />
+      </div>
+    </section>
+    <Gallery photos={assets.photos} />
+  </article>
+</Base>

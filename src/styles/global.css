@@ -1,0 +1,442 @@
+:root {
+  --spruce: #1e2d22;
+  --spruce-2: #2c4334;
+  --moss: #3e5c45;
+  --lichen: #e4eee6;
+  --paper: #f7f4ec;
+  --paper-2: #fffdf8;
+  --ink: #1c241c;
+  --ink-soft: #3e4a40;
+  --bark: #6e4b32;
+  --copper: #9a4e2c;
+  --line: #ddd4c4;
+  --shadow: 0 12px 28px rgba(30, 45, 34, 0.08);
+  --serif: 'Literata', 'Iowan Old Style', Palatino, Georgia, serif;
+  --sans: 'Source Sans 3', 'Segoe UI', sans-serif;
+  --radius: 16px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 420px at 8% -10%, rgba(255, 252, 245, 0.95), transparent 55%),
+    var(--lichen);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+img { max-width: 100%; }
+
+a { color: var(--moss); }
+
+:focus-visible {
+  outline: 3px solid var(--copper);
+  outline-offset: 2px;
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  background: var(--paper-2);
+  color: var(--ink);
+  padding: 0.5rem 0.8rem;
+  z-index: 5;
+}
+
+.skip:focus { top: 0.5rem; }
+
+.site-header {
+  background: var(--spruce);
+  color: #f4efe4;
+  border-bottom: 3px solid var(--copper);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  max-width: 68rem;
+  margin: 0;
+  padding: 0.95rem 1.25rem;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.logo { width: 1.6rem; height: 1.6rem; flex: none; }
+
+.wrap {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 3rem;
+}
+
+.site-footer {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 0 1.25rem 2.5rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.site-footer p { margin: 0; }
+
+.lede {
+  margin: 0 0 1.5rem;
+  max-width: 40rem;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.45;
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+h1 {
+  margin: 0 0 0.4rem;
+  font-size: clamp(2rem, 5vw, 3.1rem);
+}
+
+.brand { font-size: clamp(1.45rem, 2.4vw, 1.8rem); }
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.35rem;
+}
+
+h3 {
+  margin: 0.15rem 0 0.35rem;
+  font-size: 1.45rem;
+}
+
+.season {
+  margin: 1.75rem 0 0.7rem;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bark);
+}
+
+.meta {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.facts { margin-top: 0.7rem; color: var(--bark); font-weight: 600; }
+
+.day-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.day-card {
+  display: grid;
+  grid-template-columns: 16rem 1fr;
+  min-height: 11rem;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+}
+
+.day-card:hover { border-color: #c9bba6; }
+
+.day-card img,
+.cover-fallback {
+  width: 100%;
+  height: 100%;
+  min-height: 11rem;
+  object-fit: cover;
+  background: var(--spruce-2);
+}
+
+.cover-fallback {
+  display: grid;
+  place-items: center;
+  color: #f4efe4;
+  font-family: var(--serif);
+  padding: 1rem;
+  text-align: center;
+}
+
+.day-card-body {
+  padding: 1rem 1.15rem 1.1rem;
+}
+
+.day-card-body p:not(.meta) {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.overview, .map-section, .notes, .gallery-section { margin: 1.5rem 0 0; }
+
+.map-frame {
+  height: min(70vh, 34rem);
+  min-height: 20rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #d5ddd0;
+  isolation: isolate;
+}
+
+.map-fallback { margin: 1rem; color: var(--ink-soft); }
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 1rem 0 0;
+}
+
+.stats div {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+}
+
+.stats dt {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bark);
+}
+
+.stats dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+}
+
+.prose {
+  max-width: 65ch;
+  font-family: var(--serif);
+  font-size: 1.125rem;
+  line-height: 1.65;
+}
+
+.prose p { margin: 0 0 1rem; }
+
+.prose h2 { margin: 1.4rem 0 0.5rem; font-size: 1.4rem; }
+
+.prose ul, .prose ol { margin: 0 0 1rem; padding-left: 1.2rem; }
+
+.prose blockquote {
+  margin: 0 0 1rem;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--copper);
+  background: rgba(154, 78, 44, 0.07);
+  color: var(--ink-soft);
+}
+
+.prose a { color: var(--moss); }
+
+.note { color: var(--bark); margin: 0.6rem 0 0; }
+
+.gallery {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.9rem;
+}
+
+.photo {
+  margin: 0;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.photo.is-active { outline: 3px solid var(--copper); outline-offset: 2px; }
+
+.shot {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: var(--spruce-2);
+  cursor: pointer;
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+}
+
+.photo figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
+  padding: 0.55rem 0.7rem 0.65rem;
+}
+
+.photo-n {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 999px;
+  background: var(--spruce);
+  color: #f4efe4;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.photo-caption { font-weight: 600; }
+
+.badge {
+  color: var(--bark);
+  font-size: 0.82rem;
+}
+
+.text-button,
+.lightbox-bar button {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+}
+
+.text-button { margin-left: auto; }
+
+.lightbox {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  width: min(96vw, 70rem);
+  max-height: 100dvh;
+}
+
+.lightbox::backdrop { background: rgba(16, 22, 17, 0.9); }
+
+.lightbox-figure {
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 78dvh;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #111;
+}
+
+.lightbox figcaption { margin: 0; color: #f4efe4; }
+
+.lightbox-bar { display: flex; gap: 0.5rem; }
+
+.empty {
+  background: var(--paper-2);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+}
+
+.empty p { margin: 0.2rem 0; }
+
+.pin-wrap { background: transparent !important; border: 0 !important; }
+
+.pin {
+  width: 1.85rem;
+  height: 1.85rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--spruce);
+  color: #f4efe4;
+  border: 2px solid #f7f4ec;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.pin span {
+  transform: rotate(45deg);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.pin.is-active { background: var(--copper); }
+
+.pin.is-time { box-shadow: inset 0 0 0 2px #e7d7b1, 0 1px 3px rgba(0, 0, 0, 0.35); }
+
+.leaflet-container {
+  font-family: var(--sans);
+  background: #d5ddd0;
+  width: 100%;
+}
+
+.leaflet-popup-content { margin: 0.55rem; }
+
+.leaflet-popup-content a.track-link { color: var(--spruce); font-weight: 600; }
+
+.pin-card {
+  display: grid;
+  gap: 0.35rem;
+  width: 11rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ink);
+}
+
+.pin-card img {
+  width: 100%;
+  height: 7.2rem;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.pin-card small { color: var(--bark); }
+
+@media (max-width: 720px) {
+  .day-card { grid-template-columns: 1fr; }
+  .day-card img, .cover-fallback { height: 12rem; min-height: 0; }
+  .stats { grid-template-columns: 1fr 1fr; }
+  .map-frame { height: 70vh; }
+  .text-button { margin-left: 0; }
+}
