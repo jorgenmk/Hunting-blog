@@ -6,7 +6,7 @@ The site title lives in [`src/config.ts`](src/config.ts) (`title`). Change it th
 
 ## Deploy
 
-Static Astro output only. Do not add `@astrojs/cloudflare` or any server adapter. [`wrangler.jsonc`](wrangler.jsonc) names the Worker `hunting-blog`, serves `./dist`, and leaves `previews` empty so preview builds can use the same file.
+Static Astro output only. Do not add `@astrojs/cloudflare` or any server adapter. [`wrangler.toml`](wrangler.toml) names the Worker `hunting-blog`, serves `./dist`, and sets `previews` so `npx wrangler preview` can run. Wrangler is a production dependency so a `NODE_ENV=production` install still provides it.
 
 ```bash
 npm run build
