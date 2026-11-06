@@ -4,7 +4,7 @@ Migrated from the single article [Susendalen 2026](https://turer.kvalvaag.org/po
 
 The source page lists all three GPX files once, under the whole article, not under a day heading. Track assignment below follows the timestamps inside each GPX file (Europe/Oslo) and the place names in the text.
 
-Sliding every track forward one folder would put a 15 September track on the 16 September page, and so on. The timestamps contradict that. The place names do match if the prose moves back one calendar day instead: the only track that goes west toward Drakontinden is 15 September, the 16 September track and photos sit on Laenjiengielese, and the 17 September track and photos reach Galperetinden. Dag 0 describes the drive from Værnes and has no track. 18 September has photos and no GPX, and the source article has no paragraph for that date.
+Sliding every track forward one folder would put a 15 September track on the 16 September page, and so on. The timestamps contradict that. The place names do match if the prose moves back one calendar day instead: the only track that goes west toward Drakontinden is 15 September, the 16 September track and photos sit on Laenjiengielese, and the 17 September track and photos reach Galperetinden. Dag 0 is the drive from Værnes on 14 September and has no track. 18 September is the drive home, titled "På tur hjem", and has no GPX.
 
 Coordinates come from EXIF in the downloaded image files. The old page also embeds the same positions as Leaflet markers (`L.latLng` in the page script). Those markers match the EXIF GPS within 0.00001 degrees. Nothing was added where EXIF or the GPX file did not already have a position.
 
@@ -14,15 +14,17 @@ The old gallery has no per-photo captions. Files keep the original names, prefix
 
 | Folder | Source heading | Photos | Track |
 | --- | --- | --- | --- |
-| `2026-09-15-susendalen-forberedelse` | Dag 0 Forberedelse og camp | 0 | none |
+| `2026-09-14-susendalen-forberedelse` | Dag 0 Forberedelse og camp | 0 | none |
 | `2026-09-15-susendalen-drakontinden` | Dag 1 Jakt mot Drakontinden | 2 | `activity_24411539900.gpx` |
 | `2026-09-16-susendalen-rundt-camp` | Dag 2 Lett marsj i området rundt camp | 6 | `2026-09-16-08-13-55.gpx` |
 | `2026-09-17-susendalen-galperetinden` | Dag 3 Jakt i området rundt Galperetinden | 7 | `2026-09-17-08-47-54.gpx` |
-| `2026-09-18-susendalen` | none in the source | 7 | none |
+| `2026-09-18-susendalen-pa-tur-hjem` | På tur hjem (not a heading on the source page) | 7 | none |
 
-22 photos and 3 tracks in total. Every photo's EXIF date matches its folder date. `IMG_5557.jpeg` matches 18 September in time (17:42) but its GPS is about 63.29N 9.70E, far from Susendalen. The source gallery includes it and does not explain it.
+22 photos and 3 tracks in total. Every photo's EXIF date matches its folder date. Dag 0 has no photos.
 
-Dag 0 says the group met at Værnes around 10:00 and then drove to Harvassdalen. The only track on 15 September already starts at 07:58 in the mountains, and the two photos that morning are on that walk, so that track is not the drive.
+Dag 0 is 14 September 2026: the group met at Værnes around 10:00 and drove to Harvassdalen. That page has no GPX. The only track on 15 September starts at 07:58 in the mountains, and the two photos that morning are on that walk, so that track stays with Dag 1.
+
+`IMG_5557.jpeg` is 18 September at 17:42 with GPS about 63.29N 9.70E, on the drive home. It stays on "På tur hjem" with the other photos from that date.
 
 ## Tracks
 
@@ -65,7 +67,7 @@ Gallery index is the order on the source page. The largest file linked from that
 
 Image URLs are `https://turer.kvalvaag.org/posts/susendalen_2026/images/<filename>`.
 
-`IMG_5557.jpeg` is in the source gallery and on its map, but the coordinates are about 63.29N 9.70E, far from the other Susendalen points. It is kept on 18 September because that is its EXIF date. The page does not explain the picture.
+`IMG_5557.jpeg` is in the source gallery and on its map. The coordinates are about 63.29N 9.70E, far from the other Susendalen points, because it was taken on the drive home. It stays with the other 18 September photos.
 
 The old article's social image and gallery background is `IMG_0356.JPEG`. Here the cover of each day is the first photo in source gallery order for that date, so 18 September's cover is `IMG_0354.JPEG`.
 
