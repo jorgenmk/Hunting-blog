@@ -37,7 +37,7 @@ Adding a day means creating one folder. Do not edit routes, the map, or coordina
    `src/content/days/YYYY-MM-DD-short-slug/`
 
    - `YYYY-MM-DD` is the calendar date of the hunt.
-   - `short-slug` is lowercase ASCII: `a-z`, `0-9`, and hyphens. Example: `2026-10-12-hitra-eksempel`.
+   - `short-slug` is lowercase ASCII: `a-z`, `0-9`, and hyphens. Example: `2026-09-15-susendalen-drakontinden`.
    - The date in the folder name must match `date` in `index.md`.
 
 2. Add `index.md` in that folder, saved as UTF-8. Start with this frontmatter (Norwegian text is fine in the body):
@@ -45,11 +45,11 @@ Adding a day means creating one folder. Do not edit routes, the map, or coordina
    ```yaml
    ---
    title: Kort tittel på dagen
-   date: 2026-10-12
+   date: 2026-09-15
    participants:
      - Ola Nordmann
      - Kari Nordmann
-   area: Hitra
+   area: Susendalen
    summary: Én setning som vises på forsiden.
    ---
    ```
@@ -70,12 +70,12 @@ Adding a day means creating one folder. Do not edit routes, the map, or coordina
    Name files so alphabetical order is the order they should appear. The first file is the cover on the index and photo 1 on the map.
 
    ```text
-   01-bekken.jpg
-   02-utsikt-fra-ryggen.jpg
+   01-leir.jpg
+   02-utsikt.jpg
    03-i-lia.jpg
    ```
 
-   The caption is the filename without the leading number and the extension (`02-utsikt-fra-ryggen.jpg` becomes "Utsikt fra ryggen").
+   The caption is the filename without the leading number and the extension (`02-utsikt.jpg` becomes "Utsikt").
 
    Leave the camera EXIF in the files you commit:
 
@@ -88,17 +88,7 @@ Adding a day means creating one folder. Do not edit routes, the map, or coordina
 
 6. From the repository root, run `npm run build`. The new page is `/dag/YYYY-MM-DD-short-slug/`.
 
-Days are grouped into a hunting season that starts on 1 August (`seasonStartMonth` in `src/config.ts`). 12 October 2026 and 4 January 2027 both belong to "Jaktsesong 2026/27".
-
-## Sample day
-
-`src/content/days/2026-10-12-hitra-eksempel/` is fake: a generated track near Hitra (about 63.52N, 9.10E) and drawn JPEGs stamped `EKSEMPELDATA`. Three of them have GPS. `04-uten-gps.jpg` has only a timestamp, so the build places that pin from the GPX. Delete that whole folder to remove the sample. Leave `src/content/days/` in place.
-
-Regenerate it (this overwrites that folder) with:
-
-```bash
-npm run generate-sample
-```
+Days are grouped into a hunting season that starts on 1 August (`seasonStartMonth` in `src/config.ts`). 15 September 2026 and 4 January 2027 both belong to "Jaktsesong 2026/27". A day in July belongs to the season that started the previous August.
 
 ## What the build does
 
@@ -120,12 +110,12 @@ On a day page, a photo pin opens a thumbnail. Choosing a photo in the gallery hi
 ```text
 src/config.ts                 site title, season start, map tiles, image sizes
 src/content.config.ts         markdown frontmatter schema
-src/content/days/<folder>/    one hunting day: index.md, one .gpx, photos
+src/content/days/<folder>/    one hunting day: index.md, GPX files, photos
+src/content/inventory/        where each trip's text, photos and tracks came from
 src/lib/                      GPX, EXIF, stats, image preparation
 src/pages/index.astro         newest days, grouped by season, overview map
 src/pages/dag/[slug].astro    one day
 scripts/prepare-days.ts       build step that reads folders
-scripts/generate-sample.ts    rewrites the sample day
 scripts/check-published-exif.ts
 ```
 
