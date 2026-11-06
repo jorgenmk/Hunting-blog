@@ -16,7 +16,7 @@ import {
 } from './geo.ts';
 import { parseGpx } from './gpx.ts';
 import { daysDir, manifestPath, mediaDir, repoRoot } from './paths.ts';
-import type { DayRecord, Manifest, PhotoRecord } from './types.ts';
+import type { DayRecord, DayTrack, Manifest, PhotoRecord, TrackPoint } from './types.ts';
 
 const DAY_ID = /^\d{4}-\d{2}-\d{2}-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const IMAGE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif']);
@@ -71,13 +71,9 @@ async function prepareDay(id: string, folder: string): Promise<DayRecord> {
   }
   frontmatterDate(readFileSync(path.join(folder, 'index.md'), 'utf8'), id);
 
-  const gpxNames = names.filter((name) => name.toLowerCase().endsWith('.gpx'));
-  if (gpxNames.length !== 1) {
-    throw new Error(
-      `${id}: expected exactly one .gpx file, found ${gpxNames.length}` +
-        (gpxNames.length ? ` (${gpxNames.join(', ')})` : ''),
-    );
-  }
+  const gpxNames = names
+    .filter((name) => name.toLowerCase().endsWith('.gpx'))
+    .sort((a, b) => a.localeCompare(b, 'en', { numeric: true, sensitivity: 'base' }));
   const images = names
     .filter((name) => IMAGE_EXT.has(path.extname(name).toLowerCase()))
     .sort((a, b) => a.localeCompare(b, 'nb', { numeric: true, sensitivity: 'base' }));
@@ -85,31 +81,57 @@ async function prepareDay(id: string, folder: string): Promise<DayRecord> {
   const extra = names.filter((name) => !known.has(name));
   if (extra.length > 0) console.warn(`[jaktloggen] ${id}: ignoring ${extra.join(', ')}`);
 
-  const gpx = readFileSync(path.join(folder, gpxNames[0]), 'utf8');
-  const segments = parseGpx(gpx);
-  if (segments.length === 0 || segments.every((segment) => segment.length === 0)) {
-    throw new Error(`${id}: ${gpxNames[0]} has no track points`);
+  const parsed: { file: string; segments: TrackPoint[][] }[] = [];
+  for (const name of gpxNames) {
+    const segments = parseGpx(readFileSync(path.join(folder, name), 'utf8')).filter(
+      (segment) => segment.length > 0,
+    );
+    if (segments.length === 0) throw new Error(`${id}: ${name} has no track points`);
+    parsed.push({ file: name, segments });
   }
 
-  let distanceM = 0;
-  let elevationGainM = 0;
+  let distanceM: number | null = parsed.length > 0 ? 0 : null;
+  let elevationGainM: number | null = parsed.length > 0 ? 0 : null;
   let startedAt: number | null = null;
   let endedAt: number | null = null;
-  for (const segment of segments) {
-    distanceM += distanceMeters(segment);
-    elevationGainM += elevationGain(segment, siteConfig.elevationNoiseM);
-    for (const point of segment) {
-      if (point.time == null) continue;
-      startedAt = startedAt == null ? point.time : Math.min(startedAt, point.time);
-      endedAt = endedAt == null ? point.time : Math.max(endedAt, point.time);
+  let durationS: number | null = null;
+  const timed: TrackPoint[] = [];
+  const tracks: DayTrack[] = [];
+  for (const file of parsed) {
+    let fileStart: number | null = null;
+    let fileEnd: number | null = null;
+    for (const segment of file.segments) {
+      distanceM = (distanceM ?? 0) + distanceMeters(segment);
+      elevationGainM = (elevationGainM ?? 0) + elevationGain(segment, siteConfig.elevationNoiseM);
+      for (const point of segment) {
+        if (point.time == null) continue;
+        timed.push(point);
+        fileStart = fileStart == null ? point.time : Math.min(fileStart, point.time);
+        fileEnd = fileEnd == null ? point.time : Math.max(fileEnd, point.time);
+        startedAt = startedAt == null ? point.time : Math.min(startedAt, point.time);
+        endedAt = endedAt == null ? point.time : Math.max(endedAt, point.time);
+      }
     }
+    if (fileStart != null && fileEnd != null) {
+      durationS = (durationS ?? 0) + Math.max(0, (fileEnd - fileStart) / 1000);
+    }
+    tracks.push({
+      file: file.file,
+      segments: file.segments.map((segment) => simplifyTrack(segment)).filter((segment) => segment.length > 0),
+    });
   }
 
-  const timed = segments.flat().filter((point) => point.time != null);
-  const first = segments[0][0];
-  const lastSegment = segments[segments.length - 1];
-  const last = lastSegment[lastSegment.length - 1];
-  const loop = haversine(first, last) < 40;
+  let loop = false;
+  let start: [number, number] | null = null;
+  let end: [number, number] | null = null;
+  if (parsed.length === 1) {
+    const only = parsed[0].segments;
+    const first = only[0][0];
+    const last = only[only.length - 1][only[only.length - 1].length - 1];
+    loop = haversine(first, last) < 40;
+    start = [round6(first.lat), round6(first.lon)];
+    end = [round6(last.lat), round6(last.lon)];
+  }
 
   const dayMedia = path.join(mediaDir, id);
   rmSync(dayMedia, { recursive: true, force: true });
@@ -198,20 +220,16 @@ async function prepareDay(id: string, folder: string): Promise<DayRecord> {
     });
   }
 
-  const tracks = segments
-    .map((segment) => simplifyTrack(segment))
-    .filter((segment) => segment.length > 0);
-
   return {
     id,
     distanceM,
     elevationGainM,
     startedAt: startedAt == null ? null : new Date(startedAt).toISOString(),
     endedAt: endedAt == null ? null : new Date(endedAt).toISOString(),
-    durationS: startedAt != null && endedAt != null ? Math.max(0, (endedAt - startedAt) / 1000) : null,
+    durationS,
     loop,
-    start: [round6(first.lat), round6(first.lon)],
-    end: [round6(last.lat), round6(last.lon)],
+    start,
+    end,
     tracks,
     photos,
   };

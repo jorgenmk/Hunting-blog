@@ -21,5 +21,6 @@ export const ui = {
   end: 'Slutt',
   startAndEnd: 'Start og slutt',
   noPosition: 'Uten kartfeste',
+  noTrack: 'Ingen GPX-spor for denne dagen.',
   lightbox: 'Stort bilde',
 };

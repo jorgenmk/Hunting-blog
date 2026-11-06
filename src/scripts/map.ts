@@ -126,9 +126,10 @@ function addTracks(map: L.Map, payload: MapPayload, bounds: L.LatLngBounds): L.F
       L.polyline(segment, { color: track.color, weight: 4.5, opacity: 0.95 }).addTo(group);
       for (const [lat, lon] of segment) bounds.extend([lat, lon]);
     }
-    if (track.href) {
+    if (track.label) {
+      const label = escapeHtml(track.label);
       group.bindPopup(
-        `<a class="track-link" href="${escapeHtml(track.href)}">${escapeHtml(track.label)}</a>`,
+        track.href ? `<a class="track-link" href="${escapeHtml(track.href)}">${label}</a>` : label,
       );
     }
     group.addTo(map);

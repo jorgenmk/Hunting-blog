@@ -4,21 +4,18 @@ Static hunting log. One folder per day becomes one page: text, a map of the Garm
 
 The site title lives in [`src/config.ts`](src/config.ts) (`title`). Change it there.
 
-## Deploy on Cloudflare Pages
+## Deploy
 
-Use the static build. Do not add `@astrojs/cloudflare` or any server adapter.
+Static Astro output only. Do not add `@astrojs/cloudflare` or any server adapter. [`wrangler.toml`](wrangler.toml) names the Worker `hunting-blog`, serves `./dist`, and sets `previews` so `npx wrangler preview` can run. Wrangler is a production dependency so a `NODE_ENV=production` install still provides it.
 
-| Setting | Value |
-| --- | --- |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Root directory | repository root |
-| Node.js | 22 (`NODE_VERSION=22` if the project default is older) |
-| Environment variables | none |
+```bash
+npm run build
+npx wrangler deploy
+```
 
-Pages installs dependencies, runs the build, and publishes `dist`. Resized images are created during the build. They are not committed.
+Workers Builds can use build command `npm run build`, deploy command `npx wrangler deploy`, and preview command `npx wrangler preview`. Node.js 22. No environment variables are required for the site itself.
 
-Production branch is whatever you connect in Pages, usually `main`.
+The same `dist` folder can also be published with Cloudflare Pages (build command `npm run build`, output directory `dist`).
 
 ## Local development
 
@@ -66,7 +63,7 @@ Adding a day means creating one folder. Do not edit routes, the map, or coordina
    - `summary` (optional): one plain-text sentence for the index. No Markdown.
    - Do not embed pictures with `![](...)`. Photos in the folder are picked up on their own. An embedded file would be copied with its original EXIF, and the build is set up to fail if a published image still has GPS.
 
-3. Add exactly one Garmin GPX file. Any name ending in `.gpx` is fine. Export the track the watch already recorded (`<trk>` / `<trkpt>`, with `<ele>` and `<time>` when the watch stored them). Do not draw a replacement track.
+3. Add the Garmin GPX files. Any name ending in `.gpx` is fine, and a day may contain more than one. Each file is drawn as its own track and is not joined to the next. A day with no `.gpx` still builds, without distance or time stats. Export the track the watch already recorded (`<trk>` / `<trkpt>`, with `<ele>` and `<time>` when the watch stored them). Do not draw a replacement track.
 
 4. Add the photos next to `index.md`. JPEG is the safe choice. PNG, WebP, and HEIC are also accepted. If the build cannot decode a HEIC file, convert that file to JPEG and replace it.
 

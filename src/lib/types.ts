@@ -30,17 +30,22 @@ export type PhotoRecord = {
   placedBy: 'gps' | 'time' | null;
 };
 
+export type DayTrack = {
+  file: string;
+  segments: [number, number][][];
+};
+
 export type DayRecord = {
   id: string;
-  distanceM: number;
-  elevationGainM: number;
+  distanceM: number | null;
+  elevationGainM: number | null;
   startedAt: string | null;
   endedAt: string | null;
   durationS: number | null;
   loop: boolean;
   start: [number, number] | null;
   end: [number, number] | null;
-  tracks: [number, number][][];
+  tracks: DayTrack[];
   photos: PhotoRecord[];
 };
 
