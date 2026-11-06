@@ -1,6 +1,6 @@
 ---
 title: Dag 1 Jakt mot Drakontinden
-date: 2026-09-16
+date: 2026-09-15
 area: Susendalen
 summary: Jakten starter med marsj langs sti før vi skar av vestover mot Drakontinden.
 ---

@@ -1,6 +1,6 @@
 ---
 title: Dag 3 Jakt i området rundt Galperetinden
-date: 2026-09-18
+date: 2026-09-17
 area: Susendalen
 summary: Starter som dag 1 på sti, men følger traseen sørover mot Galperetinden.
 ---

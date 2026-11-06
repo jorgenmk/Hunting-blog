@@ -2,7 +2,9 @@
 
 Migrated from the single article [Susendalen 2026](https://turer.kvalvaag.org/posts/susendalen_2026/) on Turbloggen (published 2026-09-20). The old site has no separate URL per day. The four sections below are the `h4` headings on that page, in order.
 
-The page does not say which heading belongs to which calendar date. Photo EXIF dates are 15, 16, 17 and 18 September 2026, in the same count and order as Dag 0–3, so each section is stored on that date. Tracks are not assigned from the prose. A track is included only when its own GPX timestamps fall on that date.
+The source page lists all three GPX files once, under the whole article, not under a day heading. Track assignment below follows the timestamps inside each GPX file (Europe/Oslo) and the place names in the text.
+
+Sliding every track forward one folder would put a 15 September track on the 16 September page, and so on. The timestamps contradict that. The place names do match if the prose moves back one calendar day instead: the only track that goes west toward Drakontinden is 15 September, the 16 September track and photos sit on Laenjiengielese, and the 17 September track and photos reach Galperetinden. Dag 0 describes the drive from Værnes and has no track. 18 September has photos and no GPX, and the source article has no paragraph for that date.
 
 Coordinates come from EXIF in the downloaded image files. The old page also embeds the same positions as Leaflet markers (`L.latLng` in the page script). Those markers match the EXIF GPS within 0.00001 degrees. Nothing was added where EXIF or the GPX file did not already have a position.
 
@@ -12,20 +14,23 @@ The old gallery has no per-photo captions. Files keep the original names, prefix
 
 | Folder | Source heading | Photos | Track |
 | --- | --- | --- | --- |
-| `2026-09-15-susendalen-forberedelse` | Dag 0 Forberedelse og camp | 2 | `activity_24411539900.gpx` |
-| `2026-09-16-susendalen-drakontinden` | Dag 1 Jakt mot Drakontinden | 6 | `2026-09-16-08-13-55.gpx` |
-| `2026-09-17-susendalen-rundt-camp` | Dag 2 Lett marsj i området rundt camp | 7 | `2026-09-17-08-47-54.gpx` |
-| `2026-09-18-susendalen-galperetinden` | Dag 3 Jakt i området rundt Galperetinden | 7 | none |
+| `2026-09-15-susendalen-forberedelse` | Dag 0 Forberedelse og camp | 0 | none |
+| `2026-09-15-susendalen-drakontinden` | Dag 1 Jakt mot Drakontinden | 2 | `activity_24411539900.gpx` |
+| `2026-09-16-susendalen-rundt-camp` | Dag 2 Lett marsj i området rundt camp | 6 | `2026-09-16-08-13-55.gpx` |
+| `2026-09-17-susendalen-galperetinden` | Dag 3 Jakt i området rundt Galperetinden | 7 | `2026-09-17-08-47-54.gpx` |
+| `2026-09-18-susendalen` | none in the source | 7 | none |
 
-22 photos and 3 tracks in total.
+22 photos and 3 tracks in total. Every photo's EXIF date matches its folder date. `IMG_5557.jpeg` matches 18 September in time (17:42) but its GPS is about 63.29N 9.70E, far from Susendalen. The source gallery includes it and does not explain it.
+
+Dag 0 says the group met at Værnes around 10:00 and then drove to Harvassdalen. The only track on 15 September already starts at 07:58 in the mountains, and the two photos that morning are on that walk, so that track is not the drive.
 
 ## Tracks
 
-| File | Source | GPX time span (UTC) | Name inside the file | Points |
+| File | Source | Oslo time | Where it goes | Points |
 | --- | --- | --- | --- | --- |
-| `activity_24411539900.gpx` | https://turer.kvalvaag.org/posts/susendalen_2026/activity_24411539900.gpx | 2026-09-15T05:58:17Z – 2026-09-15T14:43:06Z | Hattfjelldal Fotturer | 206 |
-| `2026-09-16-08-13-55.gpx` | https://turer.kvalvaag.org/posts/susendalen_2026/2026-09-16-08-13-55.gpx | 2026-09-16T06:14:24Z – 2026-09-16T13:12:05Z | none | 128 |
-| `2026-09-17-08-47-54.gpx` | https://turer.kvalvaag.org/posts/susendalen_2026/2026-09-17-08-47-54.gpx | 2026-09-17T06:47:58Z – 2026-09-17T15:21:46Z | none | 210 |
+| `activity_24411539900.gpx` | https://turer.kvalvaag.org/posts/susendalen_2026/activity_24411539900.gpx | 15 Sep 07:58–16:43 | West to about 65.277N 14.326E, toward Drakontinden (65.260N 14.330E). File name: Hattfjelldal Fotturer. | 206 |
+| `2026-09-16-08-13-55.gpx` | https://turer.kvalvaag.org/posts/susendalen_2026/2026-09-16-08-13-55.gpx | 16 Sep 08:14–15:12 | South to Laenjiengielese (65.304N 14.395E). | 128 |
+| `2026-09-17-08-47-54.gpx` | https://turer.kvalvaag.org/posts/susendalen_2026/2026-09-17-08-47-54.gpx | 17 Sep 08:48–17:22 | South to Galperetinden (65.272N 14.408E). | 210 |
 
 Each file is one `<trk>` with one `<trkseg>`. No day has more than one of these files.
 

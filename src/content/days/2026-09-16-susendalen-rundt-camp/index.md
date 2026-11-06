@@ -1,6 +1,6 @@
 ---
 title: Dag 2 Lett marsj i området rundt camp
-date: 2026-09-17
+date: 2026-09-16
 area: Susendalen
 summary: Fattern og Petter tar en marsj opp lia fra camp og trasker området rundt Laenjiengielese.
 ---
